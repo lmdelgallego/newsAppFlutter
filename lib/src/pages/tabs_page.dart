@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:newsapp/src/services/news_service.dart';
 import 'package:provider/provider.dart';
 
 class TabsPage extends StatelessWidget {
@@ -21,6 +22,7 @@ class _ButtonNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final navegacionModel = Provider.of<_NavegacionModel>(context);
+    final newsService = Provider.of<NewsService>(context);
 
     return BottomNavigationBar(
       currentIndex: navegacionModel.paginaActual,
