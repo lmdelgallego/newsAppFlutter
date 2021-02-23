@@ -64,6 +64,10 @@ class _CategoryBotton extends StatelessWidget {
           GestureDetector(
             onTap: () {
               print('${category.name}');
+              final newsService =
+                  Provider.of<NewsService>(context, listen: false);
+
+              newsService.selectedCategory = category.name;
             },
             child: Container(
               width: 40,
