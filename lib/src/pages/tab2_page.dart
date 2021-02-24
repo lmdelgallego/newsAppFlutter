@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:newsapp/src/models/category_model.dart';
 import 'package:newsapp/src/services/news_service.dart';
+import 'package:newsapp/src/theme/theme.dart';
 import 'package:newsapp/src/utils/utils.dart';
+import 'package:newsapp/src/widgets/lita_noticias.dart';
 import 'package:provider/provider.dart';
 
 class Tab2Page extends StatefulWidget {
@@ -15,11 +17,18 @@ class _Tab2PageState extends State<Tab2Page>
     with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    final newsService = Provider.of<NewsService>(context);
+
     return SafeArea(
       child: Scaffold(
         body: Column(
           children: [
-            Expanded(child: _ListCategory()),
+            _ListCategory(),
+            Expanded(
+              child: ListaNoticas(
+                noticias: newsService.getArticlesCategorySelected,
+              ),
+            ),
           ],
         ),
       ),
@@ -35,14 +44,18 @@ class _ListCategory extends StatelessWidget {
   Widget build(BuildContext context) {
     final categories = Provider.of<NewsService>(context).categories;
 
-    return ListView.builder(
-      physics: BouncingScrollPhysics(),
-      scrollDirection: Axis.horizontal,
-      itemCount: categories.length,
-      itemBuilder: (BuildContext context, int index) {
-        final category = categories[index];
-        return _CategoryBotton(category: category);
-      },
+    return Container(
+      width: double.infinity,
+      height: 90,
+      child: ListView.builder(
+        physics: BouncingScrollPhysics(),
+        scrollDirection: Axis.horizontal,
+        itemCount: categories.length,
+        itemBuilder: (BuildContext context, int index) {
+          final category = categories[index];
+          return _CategoryBotton(category: category);
+        },
+      ),
     );
   }
 }
@@ -57,16 +70,15 @@ class _CategoryBotton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final newsService = Provider.of<NewsService>(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
           GestureDetector(
             onTap: () {
-              print('${category.name}');
               final newsService =
                   Provider.of<NewsService>(context, listen: false);
-
               newsService.selectedCategory = category.name;
             },
             child: Container(
@@ -75,13 +87,27 @@ class _CategoryBotton extends StatelessWidget {
               margin: EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white,
+                color: newsService.selectedCategory == category.name
+                    ? myTheme.accentColor
+                    : Colors.white,
               ),
-              child: Icon(category.icon, color: Colors.black54),
+              child: Icon(
+                category.icon,
+                color: newsService.selectedCategory == category.name
+                    ? Colors.white
+                    : Colors.black54,
+              ),
             ),
           ),
           SizedBox(height: 10),
-          Text(capitalizeText(category.name)),
+          Text(
+            capitalizeText(category.name),
+            style: TextStyle(
+              color: newsService.selectedCategory == category.name
+                  ? myTheme.accentColor
+                  : Colors.white,
+            ),
+          ),
         ],
       ),
     );
