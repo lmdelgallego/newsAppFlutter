@@ -9,7 +9,7 @@ final _APIKEY = '80af870410884d14822a46eb883d66a5';
 
 class NewsService with ChangeNotifier {
   String _selectedCategory = 'business';
-
+  bool _isLoading = false;
   List<Article> headlines = [];
   List<Category> categories = [
     Category(FontAwesomeIcons.building, 'business'),
@@ -28,11 +28,16 @@ class NewsService with ChangeNotifier {
     categories.forEach((item) {
       this.categoryArticles[item.name] = new List();
     });
+    this.getArticlesByCategory(this._selectedCategory);
   }
 
+  get isLoading => this._isLoading;
+
   get selectedCategory => this._selectedCategory;
+
   set selectedCategory(String value) {
     this._selectedCategory = value;
+    this._isLoading = true;
     this.getArticlesByCategory(value);
     notifyListeners();
   }
@@ -56,7 +61,7 @@ class NewsService with ChangeNotifier {
     final resp = await http.get(url);
     final newsResponse = newsResponseFromJson(resp.body);
     this.categoryArticles[category].addAll(newsResponse.articles);
-
+    this._isLoading = false;
     notifyListeners();
   }
 

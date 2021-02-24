@@ -25,9 +25,11 @@ class _Tab2PageState extends State<Tab2Page>
           children: [
             _ListCategory(),
             Expanded(
-              child: ListaNoticas(
-                noticias: newsService.getArticlesCategorySelected,
-              ),
+              child: newsService.isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : ListaNoticas(
+                      noticias: newsService.getArticlesCategorySelected,
+                    ),
             ),
           ],
         ),
