@@ -53,6 +53,7 @@ class NewsService with ChangeNotifier {
 
   getArticlesByCategory(String category) async {
     if (this.categoryArticles[category].isNotEmpty) {
+      this._isLoading = false;
       return this.categoryArticles[category];
     }
 
